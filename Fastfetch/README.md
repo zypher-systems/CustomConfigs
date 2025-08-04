@@ -59,15 +59,7 @@ The configuration is organized into the following sections:
    - System uptime with time icon
    - Current date/time with calendar icon
 
-5. **Performance & Battery Section** (Bright Red - `\u001b[1;31m`) - NEW!
-   - Battery status and level
-   - CPU temperature monitoring
-   - GPU temperature monitoring
-
-6. **Color Palette Display** (Bright Cyan - `\u001b[1;36m`)
-   - Terminal color scheme visualization with circle symbols
-
-7. **Branding Footer** (Bright White - `\u001b[1;97m`)
+5. **Branding Footer** (Dark Gray - `\u001b[1;90m`)
    - Zypher Systems attribution
    - Custom configuration identification
 
@@ -80,10 +72,10 @@ The configuration is organized into the following sections:
 - **Icon Consistency**: Unique icons for each system component
 
 #### Advanced System Monitoring
-- **Temperature Monitoring**: CPU and GPU temperature display
-- **Battery Information**: Power status and remaining charge
 - **Network Details**: IP and WiFi connection information
-- **Performance Metrics**: Real-time system resource usage
+- **OS Age Calculation**: Days since OS installation
+- **System Uptime**: Current session duration
+- **Real-time Information**: Date and time display
 
 #### Logo Configuration
 ```jsonc
@@ -112,14 +104,16 @@ Each section uses bright ANSI color codes for enhanced visibility:
 - **Software**: `bright_yellow` - Warm, informative
 - **Desktop**: `bright_blue` - Cool, professional
 - **Network**: `bright_magenta` - Vibrant, attention-grabbing
-- **Performance**: `bright_red` - Alert, monitoring focus
-- **Palette**: `bright_cyan` - Clean, neutral
+- **Footer**: `dark_gray` - Subtle branding
 
 ### Available Colors
 `bright_black`, `bright_red`, `bright_green`, `bright_yellow`, `bright_blue`, `bright_magenta`, `bright_cyan`, `bright_white`
 
 ### Adding New Modules
 Extend the configuration with additional system information:
+- `battery` - Battery status and charge level
+- `cpu_usage` - Real-time CPU usage percentage
+- `temperature` - CPU/GPU temperature monitoring
 - `bluetooth` - Bluetooth connectivity status
 - `publicip` - External IP address
 - `weather` - Local weather information
@@ -138,8 +132,9 @@ Enhanced icon set using Nerd Font symbols:
 - `` - Storage (disk-specific)
 - `` - Network (connection)
 - `` - WiFi (wireless)
-- `` - Battery (power)
-- `` - Temperature (monitoring)
+- `` - Time/Clock (datetime)
+
+*Note: Additional icons like battery and temperature can be added when extending the configuration.*
 
 ### Border Customization
 The continuous border system uses:
@@ -207,8 +202,8 @@ The continuous border system uses:
 ### Performance Optimization
 For systems where startup speed is critical:
 - Remove `packages` module (can be slow on some systems)
-- Disable temperature monitoring if sensors are slow
 - Remove network modules if not needed
+- Simplify custom OS age calculation
 
 ### Custom Branding
 Modify the footer section to include your own branding:
@@ -220,10 +215,10 @@ Modify the footer section to include your own branding:
 ```
 
 ### System-Specific Tweaks
-- **Laptops**: Keep battery module enabled
-- **Desktops**: Remove battery module for cleaner display
-- **Servers**: Focus on network and performance modules
-- **Gaming Rigs**: Emphasize GPU and temperature monitoring
+- **Laptops**: Consider adding battery module for power monitoring
+- **Desktops**: Current configuration optimized for desktop systems
+- **Servers**: Focus on network and system information modules
+- **Development Machines**: Current setup ideal for development environments
 
 ## 🔧 Troubleshooting
 
@@ -241,13 +236,13 @@ Modify the footer section to include your own branding:
 
 **Slow Performance**
 - Disable `packages` module
-- Remove temperature monitoring
 - Simplify network modules
+- Remove custom OS age calculation if problematic
 
 **Missing Information**
-- Install required system tools (`lscpu`, `lspci`, `sensors`)
+- Install required system tools (`lscpu`, `lspci`, `ip`)
 - Check module permissions
-- Verify hardware sensor support
+- Verify network interface availability
 
 ### Performance Tuning
 ```bash
@@ -259,6 +254,9 @@ time fastfetch
 
 # Debug module issues
 fastfetch --verbose
+
+# Test network connectivity for IP/WiFi modules
+ip addr show
 ```
 
 ## 📜 Technical Specifications
