@@ -199,26 +199,26 @@ if status is-interactive
         echo "╭────────────────────────────────────────────────────────────╮"
         set_color normal
         set_color --bold blue
-        printf "│ 🚀 %-54s │\n" "Zypher Terminal - Enhanced Experience"
+        printf "│ 🚀 %-55s │\n" "Zypher Terminal - Enhanced Experience"
         set_color normal
         set_color yellow
-        printf "│ 📅 %-54s │\n" (date "+%A, %B %d, %Y at %I:%M %p")
+        printf "│ 📅 %-55s │\n" (date "+%A, %B %d, %Y at %I:%M %p")
         set_color normal
         set_color green
         set -l uptime_info (cat /proc/uptime | cut -d' ' -f1)
         set -l uptime_hours (math "floor($uptime_info / 3600)")
         set -l uptime_minutes (math "floor(($uptime_info % 3600) / 60)")
-        printf "│ 💾 %-54s │\n" "Uptime: $uptime_hours hours, $uptime_minutes minutes"
+        printf "│ 💾 %-55s │\n" "Uptime: $uptime_hours hours, $uptime_minutes minutes"
         set_color normal
         set_color magenta
         set -l host_name (cat /etc/hostname 2>/dev/null || echo "Unknown")
-        printf "│ 🖥️  %-54s │\n" "Host: $host_name"
+        printf "│ 🖥️ %-55s │\n" "Host: $host_name"
         set_color normal
         set_color red
-        printf "│ 👤 %-54s │\n" "User: $USER"
+        printf "│ 👤 %-55s │\n" "User: $USER"
         set_color normal
         set_color blue
-        printf "│ 🐚 %-54s │\n" "Shell: Fish "(fish --version | string match -r '\d+\.\d+\.\d+')
+        printf "│ 🐚 %-55s │\n" "Shell: Fish "(fish --version | string match -r '\d+\.\d+\.\d+')
         set_color normal
         set_color cyan
         echo "╰────────────────────────────────────────────────────────────╯"
