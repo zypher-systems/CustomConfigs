@@ -135,6 +135,8 @@ font-size = 14
 background-opacity = 0.9
 theme = carbonfox
 shell-integration = fish
+window-width = 130
+window-height = 40
 EOF
 fi
 
