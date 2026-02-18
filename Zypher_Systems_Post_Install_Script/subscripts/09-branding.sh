@@ -18,26 +18,44 @@ cp "$SOURCE_DIR/$ICON" "$DEST_DIR/"
 echo "   Setting Wallpaper..."
 plasma-apply-wallpaperimage "$DEST_DIR/$WALLPAPER"
 
-# --- 3. Apply Launcher Icon (Plasma 6 Property Fix) ---
+# --- 3. Apply Launcher Icon (Bulletproof Method) ---
 echo "   Injecting Launcher Icon via DBus..."
 
-# Create the Javascript payload
-# FIX 1: Use desktops() and panels() instead of containments()
-# FIX 2: Use 'c.applets' (property) instead of 'c.applets()' (function)
+# This JS script tries .applets, .widgets, AND .appletIds to ensure it works
 cat > /tmp/zypher_icon_update.js <<EOF
-var allContainments = desktops().concat(panels());
+// Helper function to apply the icon
+function applyIcon(w) {
+    if (!w) return;
+    if (w.type === "org.kde.plasma.kickoff" || w.type === "org.kde.plasma.kicker" || w.type === "org.kde.plasma.kickerdash") {
+        w.currentConfigGroup = ["General"];
+        w.writeConfig("icon", "$ICON_PATH");
+        w.reloadConfig();
+    }
+}
 
-for (var i = 0; i < allContainments.length; i++) {
-    var c = allContainments[i];
-    var widgets = c.applets; // <--- The Fix: No parentheses!
+// Get all desktops and panels
+var all = desktops().concat(panels());
+
+for (var i = 0; i < all.length; i++) {
+    var c = all[i];
     
-    for (var j = 0; j < widgets.length; j++) {
-        var w = widgets[j];
-        // Check for common launcher types (Kickoff, Kicker, etc.)
-        if (w.type === "org.kde.plasma.kickoff" || w.type === "org.kde.plasma.kicker" || w.type === "org.kde.plasma.kickerdash") {
-            w.currentConfigGroup = ["General"];
-            w.writeConfig("icon", "$ICON_PATH");
-            w.reloadConfig();
+    // Strategy 1: Try '.applets' (Standard)
+    var widgets = c.applets;
+    
+    // Strategy 2: Try '.widgets' (Alternative name)
+    if (!widgets) widgets = c.widgets;
+    
+    if (widgets) {
+        // If we found a list of objects, iterate them
+        for (var j = 0; j < widgets.length; j++) {
+            applyIcon(widgets[j]);
+        }
+    } else if (c.appletIds) {
+        // Strategy 3: Try '.appletIds' and look them up manually
+        var ids = c.appletIds;
+        for (var k = 0; k < ids.length; k++) {
+            var w = c.appletById(ids[k]);
+            applyIcon(w);
         }
     }
 }
