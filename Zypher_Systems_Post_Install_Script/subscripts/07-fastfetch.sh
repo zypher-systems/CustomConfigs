@@ -167,4 +167,3 @@ EOF
 
 echo "✅ ZypherOS Configuration Complete!"
 echo "   Running fastfetch to verify..."
-fastfetch

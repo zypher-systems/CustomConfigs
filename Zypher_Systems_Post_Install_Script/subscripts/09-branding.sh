@@ -63,3 +63,4 @@ else
 fi
 
 echo "✅ Branding Applied."
+fastfetch
