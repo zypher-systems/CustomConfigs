@@ -70,6 +70,7 @@ FLATPAKS=(
     it.mijorus.gearlever
     com.github.tchx84.Flatseal
     com.google.Chrome
+    com.discordapp.Discord
 )
 
 for pkg in "${FLATPAKS[@]}"; do
