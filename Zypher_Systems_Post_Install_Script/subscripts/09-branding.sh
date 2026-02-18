@@ -18,17 +18,19 @@ cp "$SOURCE_DIR/$ICON" "$DEST_DIR/"
 echo "   Setting Wallpaper..."
 plasma-apply-wallpaperimage "$DEST_DIR/$WALLPAPER"
 
-# --- 3. Apply Launcher Icon (Plasma 6 Fixed) ---
+# --- 3. Apply Launcher Icon (Plasma 6 Property Fix) ---
 echo "   Injecting Launcher Icon via DBus..."
 
 # Create the Javascript payload
-# FIX: Plasma 6 replaced 'containments()' with 'desktops()' and 'panels()'
+# FIX 1: Use desktops() and panels() instead of containments()
+# FIX 2: Use 'c.applets' (property) instead of 'c.applets()' (function)
 cat > /tmp/zypher_icon_update.js <<EOF
 var allContainments = desktops().concat(panels());
 
 for (var i = 0; i < allContainments.length; i++) {
     var c = allContainments[i];
-    var widgets = c.applets();
+    var widgets = c.applets; // <--- The Fix: No parentheses!
+    
     for (var j = 0; j < widgets.length; j++) {
         var w = widgets[j];
         // Check for common launcher types (Kickoff, Kicker, etc.)
@@ -42,7 +44,6 @@ for (var i = 0; i < allContainments.length; i++) {
 EOF
 
 # Execute the script inside the running Plasma Shell
-# We check for qdbus-qt6 first since Arch is on Qt6 now
 if command -v qdbus-qt6 &> /dev/null; then
     RUNNER="qdbus-qt6"
 elif command -v qdbus6 &> /dev/null; then
