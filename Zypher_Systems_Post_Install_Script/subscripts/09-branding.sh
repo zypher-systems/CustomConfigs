@@ -18,13 +18,14 @@ cp "$SOURCE_DIR/$ICON" "$DEST_DIR/"
 echo "   Setting Wallpaper..."
 plasma-apply-wallpaperimage "$DEST_DIR/$WALLPAPER"
 
-# --- 3. Apply Launcher Icon (The Professional Way) ---
+# --- 3. Apply Launcher Icon (Plasma 6 Fixed) ---
 echo "   Injecting Launcher Icon via DBus..."
 
-# We create a temporary JavaScript file that Plasma can execute live.
-# This script finds the launcher widget and updates its config in memory.
+# Create the Javascript payload
+# FIX: Plasma 6 replaced 'containments()' with 'desktops()' and 'panels()'
 cat > /tmp/zypher_icon_update.js <<EOF
-var allContainments = containments();
+var allContainments = desktops().concat(panels());
+
 for (var i = 0; i < allContainments.length; i++) {
     var c = allContainments[i];
     var widgets = c.applets();
@@ -41,13 +42,13 @@ for (var i = 0; i < allContainments.length; i++) {
 EOF
 
 # Execute the script inside the running Plasma Shell
-# We use qdbus (standard KDE tool) to send the script to the desktop engine
+# We check for qdbus-qt6 first since Arch is on Qt6 now
 if command -v qdbus-qt6 &> /dev/null; then
     RUNNER="qdbus-qt6"
 elif command -v qdbus6 &> /dev/null; then
     RUNNER="qdbus6"
 else
-    RUNNER="qdbus" # Fallback for older systems
+    RUNNER="qdbus" 
 fi
 
 $RUNNER org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$(cat /tmp/zypher_icon_update.js)"
