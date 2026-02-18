@@ -5,7 +5,6 @@ echo "🎨 [9/9] Applying ZypherOS Branding..."
 SOURCE_DIR="../images"
 DEST_DIR="$HOME/.local/share/zypher/branding"
 CONFIG_FILE="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
-
 WALLPAPER="zypher_os_wallpaper.png"
 ICON="zypher_os_launcher_icon.png"
 
@@ -15,28 +14,35 @@ mkdir -p "$DEST_DIR"
 cp "$SOURCE_DIR/$WALLPAPER" "$DEST_DIR/"
 cp "$SOURCE_DIR/$ICON" "$DEST_DIR/"
 
-# --- 2. Apply Wallpaper ---
+# --- 2. Apply Wallpaper (Requires Running Plasma) ---
 echo "   Setting Wallpaper..."
+# We do this BEFORE killing Plasma, because this tool talks to the running desktop
 plasma-apply-wallpaperimage "$DEST_DIR/$WALLPAPER"
 
-# --- 3. Apply Launcher Icon (Robust Method) ---
-echo "   Setting Launcher Icon..."
+# --- 3. The "Nuclear" Icon Swap ---
+echo "   Applying Icon (Restarting Plasma)..."
 
-# 🧠 The Fix: Use awk to track the [Section] header properly
-# This ignores 'immutability=1' or other junk lines between the header and the plugin
+# Step A: Kill Plasma gracefully to force it to save its current state
+kquitapp6 plasmashell || true
+
+# Step B: Wait for it to actually die (prevents overwrite race condition)
+echo "   Waiting for Plasma to shutdown..."
+while pgrep -u "$USER" -x plasmashell > /dev/null; do
+    sleep 1
+done
+
+# Step C: Patch the Config File (Now safe to edit)
+# Find the Launchers Group ID using the robust awk method
 LAUNCHER_GROUP=$(awk '/^\[/{last=$0} /plugin=org.kde.plasma.kickoff/{print last; exit}' "$CONFIG_FILE")
 
 if [ -n "$LAUNCHER_GROUP" ]; then
     echo "   Found Launcher Group: $LAUNCHER_GROUP"
-
-    # Convert "[Containments][1][Applets][5]" -> "Containments 1 Applets 5"
-    # This allows us to feed it to kwriteconfig dynamically
-    CLEAN_PATH=$(echo "$LAUNCHER_GROUP" | sed 's/^\[//;s/\]$//;s/\]\[/ /g')
     
-    # Read into an array so we can access parts by index (0, 1, 2, 3)
+    # Parse the group structure
+    CLEAN_PATH=$(echo "$LAUNCHER_GROUP" | sed 's/^\[//;s/\]$//;s/\]\[/ /g')
     read -r -a GROUPS <<< "$CLEAN_PATH"
     
-    # Write the icon config
+    # Write the icon path directly to the file
     kwriteconfig6 \
         --file "$CONFIG_FILE" \
         --group "${GROUPS[0]}" \
@@ -47,13 +53,16 @@ if [ -n "$LAUNCHER_GROUP" ]; then
         --group "General" \
         --key "icon" "$DEST_DIR/$ICON"
         
-    echo "   ✅ Icon configuration written."
-    
-    # Restart Plasma safely to show changes
-    kquitapp6 plasmashell || true
-    kstart6 plasmashell &>/dev/null &
+    echo "   ✅ Icon configuration patched."
 else
-    echo "   ⚠️  Could not find Launcher widget in config. Icon not set."
+    echo "   ⚠️  Could not find Launcher widget. Icon not set."
 fi
+
+# Step D: Resurrect Plasma (Bulletproof Method)
+echo "   Restarting Desktop..."
+
+# 'nohup' prevents the desktop from closing when this script ends
+# '>/dev/null 2>&1' silences all the debug text output
+nohup kstart6 plasmashell > /dev/null 2>&1 &
 
 echo "✅ Branding Applied."
