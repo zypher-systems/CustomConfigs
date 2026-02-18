@@ -29,25 +29,18 @@ PACKAGES=(
     git
     fastfetch
     fish
-    neovim          # Added for your config (EDITOR=nvim)
-    starship        # Added for your prompt
-    zoxide          # Added for your config
-    thefuck         # Added for your config
-    eza             # Required for your aliases
-    bat             # Required for your aliases
+    neovim
+    starship
+    zoxide
+    thefuck
+    eza
+    bat
     btop
-
-    # Desktop
-    plasma-meta
-    dolphin
-    konsole
-    sddm
-    sddm-kcm
 
     # Apps
     ghostty
     gwenview
-    okular
+    okulara
     gimp
     blender
     inkscape
@@ -135,8 +128,6 @@ font-size = 14
 background-opacity = 0.9
 theme = carbonfox
 shell-integration = fish
-window-width = 130
-window-height = 40
 EOF
 fi
 
