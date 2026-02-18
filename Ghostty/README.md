@@ -19,3 +19,4 @@ Feel free to modify these settings to better suit your workflow!
 ---
 
 For more information about Ghostty, visit: [Ghostty on GitHub](https://github.com/ghostty-org/ghostty)
+test
