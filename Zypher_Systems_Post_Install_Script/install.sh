@@ -41,6 +41,7 @@ chmod +x *.sh
 ./05-ghostty.sh
 ./06-fish.sh
 ./07-fastfetch.sh
+./08-plasma.sh
 
 # --- Cleanup ---
 echo "🧹 Cleaning up temporary files..."
