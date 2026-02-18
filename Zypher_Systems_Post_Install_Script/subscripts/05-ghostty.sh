@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🎨 [5/7] Configuring Ghostty..."
+echo "🎨 [5/9] Configuring Ghostty..."
 
 mkdir -p "$HOME/.config/ghostty/themes"
 GHOSTTY_CONFIG="$HOME/.config/ghostty/config"

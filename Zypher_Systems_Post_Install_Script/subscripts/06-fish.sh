@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🐠 [6/7] Configuring Fish Shell..."
+echo "🐠 [6/9] Configuring Fish Shell..."
 
 mkdir -p "$HOME/.config/fish"
 

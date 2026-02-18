@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "📦 [1/7] Configuring Repositories..."
+echo "📦 [1/9] Configuring Repositories..."
 
 if ! grep -q "^\[multilib\]" /etc/pacman.conf; then
     echo "   Enabling multilib..."

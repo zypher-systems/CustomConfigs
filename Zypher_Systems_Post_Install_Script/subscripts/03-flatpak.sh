@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "📦 [3/7] Setting up Flatpaks..."
+echo "📦 [3/9] Setting up Flatpaks..."
 
 # 1. Setup Remotes (Allow failure if it already exists)
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
