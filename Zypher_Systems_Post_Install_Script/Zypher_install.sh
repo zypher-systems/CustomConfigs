@@ -40,7 +40,7 @@ PACKAGES=(
     # Apps
     ghostty
     gwenview
-    okulara
+    okular
     gimp
     blender
     inkscape
